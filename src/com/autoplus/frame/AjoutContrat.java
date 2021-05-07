@@ -1,0 +1,828 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.autoplus.frame;
+
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import net.proteanit.sql.DbUtils;
+
+/**
+ *
+ * @author anouer
+ */
+public class AjoutContrat extends javax.swing.JFrame {
+Connection conn = null;
+    ResultSet rs = null;
+    PreparedStatement ps = null;
+    static String test3;
+  static String test;
+  String etat;
+  String categorie;
+    /**
+     * Creates new form AjoutContrat
+     */
+    public AjoutContrat() {
+        initComponents();
+        conn = ConexionBD.Conexion();
+         AffichageContart();
+        Recuperr();
+       buttonGroup1.add(activ);
+        buttonGroup1.add(archiv);
+        buttonGroup2.add(Codeb);
+        buttonGroup2.add(Conduiteb);
+        supbtn.setEnabled(false);
+        modifierbtn.setEnabled(false);
+        btnadd.setEnabled(false);
+    }
+    public void AffichageContart() {
+      Liste_des_Candidats info = new Liste_des_Candidats();
+        
+        try {
+ String recv = info.gettableresult();
+ System.out.println(recv);
+            String requete1 = "select idctr as 'IdContrat' ,cinctr as 'Cin_Candidat', datdbctr as 'Date Debit',datfinctr as 'Date Fin' ,montantctr as 'Montant' ,nbrheure as 'Nbr Heure',nbrexamen as 'Nbr Examens',catpermis as 'Type permis' ,etat as 'Etat' ,typectr as 'Type Contrat' from  contrat where cinctr = '" + recv + "' ";
+            ps = conn.prepareStatement(requete1);
+            rs = ps.executeQuery();
+            Table.setModel(DbUtils.resultSetToTableModel(rs));
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }
+    public void clear(){
+        datedebit.setDate(null);
+        datefin.setDate(null);
+        Mtcontrat.setText("");
+        txtnombreh.setText("");
+        nbrexamen.setText("");
+    }
+     public void Deplace() {
+          
+        try {
+
+            int row = Table.getSelectedRow();
+            String test = (Table.getModel().getValueAt(row,0).toString());
+            
+             String requet = "select * from contrat where idctr = '" + test+ "'";
+            ps = conn.prepareStatement(requet);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                String t1 = rs.getString("typectr");
+       if (t1.equals("Code")) {
+             categorie="Code"; 
+           Codeb.setSelected(true);
+           Conduiteb.setSelected(false);
+        } else if(t1.equals("Conduite")){
+           categorie="Conduite";
+          Conduiteb.setSelected(true);
+          Codeb.setSelected(false);
+ }
+                Date t2 = rs.getDate("datdbctr");
+                datedebit.setDate(t2);
+                Date t6 = rs.getDate("datfinctr");
+                datefin.setDate(t6);
+                String t = rs.getString("montantctr");
+                Mtcontrat.setText(t);
+                 String v9 = rs.getString("nbrheure");
+                txtnombreh.setText(v9);
+                String t5= rs.getString("nbrexamen");
+                nbrexamen.setText(t5);
+                  String rbc =rs.getString("etat");
+        if (rbc.equals("Actif")) {
+           etat="Actif"; 
+           activ.setSelected(true);
+ } else if(rbc.equals("Archive")){
+      etat="Archive";
+     archiv.setSelected(true);
+ }
+    
+  }
+
+        } catch (Exception e) {
+            System.out.println(e);
+            
+        }
+    }
+public void Recuperr() {
+        Liste_des_Candidats inf = new Liste_des_Candidats();
+        inf.Deplace();
+        try {
+             String rec = inf.gettableresult();
+      System.out.println(rec);
+            
+            String requet = "select * from candidat_table where cin = '" + rec + "'";
+            ps = conn.prepareStatement(requet);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                String t1 = rs.getString("cin");
+                txtcin.setText(t1);
+                String t2 = rs.getString("nomc");
+                txtnom.setText(t2);
+                String t = rs.getString("prenomc");
+                txtprenom.setText(t);
+                 String v9 = rs.getString("typeiscri");
+                ComboInscription.addItem(v9);
+                String t6 = rs.getString("gsm");
+                txtgsm.setText(t6);
+
+            }
+           
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+//        
+    }
+ 
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        jLabel1 = new javax.swing.JLabel();
+        txtcin = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtnom = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtprenom = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txtgsm = new javax.swing.JTextField();
+        datedebit = new com.toedter.calendar.JDateChooser();
+        datefin = new com.toedter.calendar.JDateChooser();
+        Mtcontrat = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        txtnombreh = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        nbrexamen = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        btnadd = new javax.swing.JButton();
+        ComboInscription = new javax.swing.JComboBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Table = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        supbtn = new javax.swing.JButton();
+        activ = new javax.swing.JCheckBox();
+        archiv = new javax.swing.JCheckBox();
+        modifierbtn = new javax.swing.JButton();
+        btnnv = new javax.swing.JButton();
+        Codeb = new javax.swing.JCheckBox();
+        Conduiteb = new javax.swing.JCheckBox();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Contrat");
+        setBackground(new java.awt.Color(102, 255, 102));
+        setMinimumSize(new java.awt.Dimension(980, 980));
+        setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        getContentPane().setLayout(null);
+
+        jLabel1.setText("cin");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(70, 50, 13, 14);
+
+        txtcin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtcinActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtcin);
+        txtcin.setBounds(110, 50, 160, 20);
+
+        jLabel3.setText("nom");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(70, 90, 20, 14);
+        getContentPane().add(txtnom);
+        txtnom.setBounds(110, 90, 160, 20);
+
+        jLabel4.setText("prenom");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(70, 120, 36, 14);
+        getContentPane().add(txtprenom);
+        txtprenom.setBounds(110, 120, 160, 20);
+
+        jLabel5.setText("GSM");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(70, 160, 21, 14);
+
+        txtgsm.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtgsmMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtgsmMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtgsmMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                txtgsmMouseReleased(evt);
+            }
+        });
+        txtgsm.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtgsmKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtgsm);
+        txtgsm.setBounds(110, 160, 160, 20);
+
+        datedebit.setDateFormatString("yyyy-MM-dd");
+        datedebit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                datedebitMouseReleased(evt);
+            }
+        });
+        datedebit.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                datedebitComponentAdded(evt);
+            }
+        });
+        datedebit.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                datedebitAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        datedebit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                datedebitKeyReleased(evt);
+            }
+        });
+        getContentPane().add(datedebit);
+        datedebit.setBounds(460, 80, 160, 20);
+
+        datefin.setDateFormatString("yyyy-MM-dd");
+        datefin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                datefinMouseReleased(evt);
+            }
+        });
+        datefin.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                datefinComponentAdded(evt);
+            }
+        });
+        datefin.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                datefinAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        datefin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                datefinKeyReleased(evt);
+            }
+        });
+        getContentPane().add(datefin);
+        datefin.setBounds(460, 120, 160, 20);
+
+        Mtcontrat.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        Mtcontrat.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                MtcontratCaretUpdate(evt);
+            }
+        });
+        Mtcontrat.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                MtcontratMouseEntered(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                MtcontratMouseReleased(evt);
+            }
+        });
+        Mtcontrat.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                MtcontratCaretPositionChanged(evt);
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+        Mtcontrat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                MtcontratKeyTyped(evt);
+            }
+        });
+        getContentPane().add(Mtcontrat);
+        Mtcontrat.setBounds(460, 150, 160, 20);
+
+        jLabel2.setText("Date fin:");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(400, 120, 50, 20);
+
+        jLabel6.setText("Date débit :");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(390, 80, 60, 20);
+
+        jLabel7.setText("Montant");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(390, 150, 70, 20);
+
+        jLabel8.setText("Nombre d'heures:");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(360, 190, 90, 14);
+
+        txtnombreh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                txtnombrehMouseReleased(evt);
+            }
+        });
+        txtnombreh.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtnombrehKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtnombreh);
+        txtnombreh.setBounds(470, 180, 150, 20);
+
+        jLabel9.setText("Nombre d'Examen :");
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(370, 230, 100, 14);
+
+        nbrexamen.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                nbrexamenMouseReleased(evt);
+            }
+        });
+        nbrexamen.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nbrexamenKeyTyped(evt);
+            }
+        });
+        getContentPane().add(nbrexamen);
+        nbrexamen.setBounds(480, 220, 140, 20);
+
+        jLabel10.setText("Categorie Permis :");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(30, 200, 100, 20);
+
+        jLabel11.setText("Etat :");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(380, 260, 27, 14);
+
+        jLabel12.setText("Type Contrat :");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(390, 40, 80, 14);
+
+        btnadd.setText("ajout contrat");
+        btnadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnaddActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnadd);
+        btnadd.setBounds(480, 310, 130, 50);
+
+        getContentPane().add(ComboInscription);
+        ComboInscription.setBounds(120, 200, 140, 20);
+
+        Table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        Table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                TableMouseReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(Table);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(10, 420, 820, 180);
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/autoplus/images/search.png"))); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2);
+        jButton2.setBounds(280, 50, 40, 23);
+
+        supbtn.setText("Supprimer");
+        supbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supbtnActionPerformed(evt);
+            }
+        });
+        getContentPane().add(supbtn);
+        supbtn.setBounds(480, 360, 130, 50);
+
+        activ.setText("Actif");
+        activ.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                activMouseClicked(evt);
+            }
+        });
+        activ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                activActionPerformed(evt);
+            }
+        });
+        getContentPane().add(activ);
+        activ.setBounds(470, 260, 81, 23);
+
+        archiv.setText("archive");
+        archiv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                archivMouseClicked(evt);
+            }
+        });
+        getContentPane().add(archiv);
+        archiv.setBounds(560, 260, 61, 23);
+
+        modifierbtn.setText("modifier");
+        modifierbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modifierbtnActionPerformed(evt);
+            }
+        });
+        getContentPane().add(modifierbtn);
+        modifierbtn.setBounds(320, 360, 160, 50);
+
+        btnnv.setText("Nouveau");
+        btnnv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnnvActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnnv);
+        btnnv.setBounds(320, 310, 160, 50);
+
+        Codeb.setText("Code");
+        Codeb.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CodebMouseClicked(evt);
+            }
+        });
+        getContentPane().add(Codeb);
+        Codeb.setBounds(470, 40, 60, 23);
+
+        Conduiteb.setText("Conduite");
+        Conduiteb.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ConduitebMouseClicked(evt);
+            }
+        });
+        getContentPane().add(Conduiteb);
+        Conduiteb.setBounds(530, 40, 69, 23);
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void txtcinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcinActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtcinActionPerformed
+
+    private void txtgsmKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtgsmKeyTyped
+        char t = evt.getKeyChar();
+        if (!(Character.isDigit(t) || (t == KeyEvent.VK_BACK_SPACE) || (t == KeyEvent.VK_DELETE))) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtgsmKeyTyped
+
+    private void datedebitMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datedebitMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datedebitMouseReleased
+
+    private void datedebitComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_datedebitComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datedebitComponentAdded
+
+    private void datedebitAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_datedebitAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datedebitAncestorAdded
+
+    private void datedebitKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_datedebitKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datedebitKeyReleased
+
+    private void datefinMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datefinMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datefinMouseReleased
+
+    private void datefinComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_datefinComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datefinComponentAdded
+
+    private void datefinAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_datefinAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datefinAncestorAdded
+
+    private void datefinKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_datefinKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datefinKeyReleased
+
+    private void btnaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddActionPerformed
+  String tcat = (String) ComboInscription.getSelectedItem();
+try {
+   String requete = "insert into contrat (cinctr,datdbctr,datfinctr,montantctr,nbrheure,nbrexamen,catpermis,etat,typectr) values (?,?,?,?,?,?,?,?,?)";
+            ps = conn.prepareStatement(requete);
+            ps.setString(1, txtcin.getText());
+            ps.setString(2, ((JTextField) datedebit.getDateEditor().getUiComponent()).getText());
+            ps.setString(3, ((JTextField) datefin.getDateEditor().getUiComponent()).getText());
+            ps.setString(4, Mtcontrat.getText());
+            ps.setString(5, txtnombreh.getText());
+            ps.setString(6, nbrexamen.getText());
+            ps.setString(7, tcat);
+            ps.setString(8, etat);
+            ps.setString(9, categorie);
+           
+            ps.execute();
+
+            JOptionPane.showMessageDialog(null, "Enregistrement avec succès");
+
+            
+
+        } catch (Exception e) {
+            System.out.println("--> SQLException : " + e);
+            JOptionPane.showMessageDialog(null, "Tout est Obligatoire");
+        } finally {
+
+            try {
+                ps.close();
+                rs.close();
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "deja inserre");
+            }
+        } 
+refresh();
+    }//GEN-LAST:event_btnaddActionPerformed
+public void refresh(){
+     try {
+
+            String requete = "select idctr as 'IdContrat' ,cinctr as 'Cin_Candidat', datdbctr as 'Date Debit',datfinctr as 'Date Fin' ,montantctr as 'Montant' ,nbrheure as 'Nbr Heure',nbrexamen as 'Nbr Examens',catpermis as 'Type permis' ,etat as 'Etat' ,typectr as 'Type Contrat' from  contrat where cinctr=? ";
+            ps = conn.prepareStatement(requete);
+            ps.setString(1, txtcin.getText());
+            rs = ps.executeQuery();
+
+            Table.setModel(DbUtils.resultSetToTableModel(rs));
+//            Table4.setForeground(Color.green);
+//            Table4.setBackground(Color.green);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+}
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       refresh();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void supbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supbtnActionPerformed
+        try {
+            int row = Table.getSelectedRow();
+            this.test3 = (Table.getModel().getValueAt(row, 0).toString());
+            if (JOptionPane.showConfirmDialog(null, "attention vous devez suprimer une Seance,est ce que tu es sur?",
+                    "Supprimer Seance", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+
+                String requete = "delete from contrat where idctr = '" + test3 + "'";
+                ps = conn.prepareStatement(requete);
+                ps.execute();
+ }
+           
+        } catch (Exception e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "erreur de supprimer \n" + e.getMessage());
+        }
+         refresh();
+         clear();
+    }//GEN-LAST:event_supbtnActionPerformed
+
+    private void TableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseReleased
+Deplace(); 
+ btnadd.setEnabled(false);
+supbtn.setEnabled(true);
+        modifierbtn.setEnabled(true);
+    }//GEN-LAST:event_TableMouseReleased
+
+    private void activActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_activActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_activActionPerformed
+
+    private void activMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_activMouseClicked
+etat="Actif";      
+    }//GEN-LAST:event_activMouseClicked
+
+    private void archivMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_archivMouseClicked
+ etat="Archive";     
+    }//GEN-LAST:event_archivMouseClicked
+
+    private void modifierbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifierbtnActionPerformed
+String t1 = txtcin.getText();
+String tcat= (String) ComboInscription.getSelectedItem();
+
+        try {
+             int row = Table.getSelectedRow();
+            this.test3 = (Table.getModel().getValueAt(row, 0).toString());
+            String requete = "update contrat set idctr =?,cinctr =?,datdbctr=?,datfinctr =?,montantctr =?,nbrheure =?,nbrexamen=?,catpermis=?,etat=?,typectr=? where  idctr ='" + test3 + "'";
+            ps = conn.prepareStatement(requete);
+           ps.setString(1, test3);
+           ps.setString(2, txtcin.getText());
+            ps.setString(3, ((JTextField) datedebit.getDateEditor().getUiComponent()).getText());
+            ps.setString(4, ((JTextField) datefin.getDateEditor().getUiComponent()).getText());
+            ps.setString(5, Mtcontrat.getText());
+            ps.setString(6, txtnombreh.getText());
+            ps.setString(7, nbrexamen.getText());
+            ps.setString(8, tcat);
+            ps.setString(9, etat);
+            ps.setString(10, categorie);
+            ps.execute();
+            JOptionPane.showMessageDialog(null, "Modification avec succès");
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+             JOptionPane.showMessageDialog(null, "Tout les champs obligatoire \n" + ex.getMessage());
+        } 
+        clear();
+       refresh();  
+    }//GEN-LAST:event_modifierbtnActionPerformed
+
+    private void CodebMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CodebMouseClicked
+categorie ="Code";        
+    }//GEN-LAST:event_CodebMouseClicked
+
+    private void ConduitebMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ConduitebMouseClicked
+categorie ="Conduite";        
+    }//GEN-LAST:event_ConduitebMouseClicked
+
+    private void btnnvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnnvActionPerformed
+supbtn.setEnabled(false);
+        modifierbtn.setEnabled(false);
+        btnadd.setEnabled(true);
+         clear();
+    }//GEN-LAST:event_btnnvActionPerformed
+
+    private void txtgsmMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtgsmMouseEntered
+     
+     
+    }//GEN-LAST:event_txtgsmMouseEntered
+
+    private void txtgsmMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtgsmMouseExited
+;  
+    }//GEN-LAST:event_txtgsmMouseExited
+
+    private void txtgsmMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtgsmMousePressed
+          
+    }//GEN-LAST:event_txtgsmMousePressed
+
+    private void MtcontratKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MtcontratKeyTyped
+     Mtcontrat.setBackground(new java.awt.Color(51,153,255)); 
+     txtnombreh.setBackground(new java.awt.Color(250,250,250));
+      nbrexamen.setBackground(new java.awt.Color(250,250,250));
+    }//GEN-LAST:event_MtcontratKeyTyped
+
+    private void txtnombrehKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnombrehKeyTyped
+     Mtcontrat.setBackground(new java.awt.Color(250,250,250));
+     nbrexamen.setBackground(new java.awt.Color(250,250,250));
+     txtnombreh.setBackground(new java.awt.Color(51,153,255));
+    }//GEN-LAST:event_txtnombrehKeyTyped
+
+    private void nbrexamenKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nbrexamenKeyTyped
+ Mtcontrat.setBackground(new java.awt.Color(250,250,250)); 
+     txtnombreh.setBackground(new java.awt.Color(250,250,250));
+      nbrexamen.setBackground(new java.awt.Color(51,153,255));
+    }//GEN-LAST:event_nbrexamenKeyTyped
+
+    private void MtcontratMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MtcontratMouseEntered
+
+    }//GEN-LAST:event_MtcontratMouseEntered
+
+    private void txtgsmMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtgsmMouseReleased
+      
+    }//GEN-LAST:event_txtgsmMouseReleased
+
+    private void MtcontratCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_MtcontratCaretUpdate
+      // TODO add your handling code here:
+    }//GEN-LAST:event_MtcontratCaretUpdate
+
+    private void MtcontratCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_MtcontratCaretPositionChanged
+     // TODO add your handling code here:
+    }//GEN-LAST:event_MtcontratCaretPositionChanged
+
+    private void MtcontratMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MtcontratMouseReleased
+     Mtcontrat.setBackground(new java.awt.Color(51,153,255)); 
+     txtnombreh.setBackground(new java.awt.Color(250,250,250));
+     nbrexamen.setBackground(new java.awt.Color(250,250,250)); 
+    }//GEN-LAST:event_MtcontratMouseReleased
+
+    private void txtnombrehMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtnombrehMouseReleased
+       Mtcontrat.setBackground(new java.awt.Color(250,250,250));
+        txtnombreh.setBackground(new java.awt.Color(51,153,255));
+        nbrexamen.setBackground(new java.awt.Color(250,250,250));
+    }//GEN-LAST:event_txtnombrehMouseReleased
+
+    private void nbrexamenMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nbrexamenMouseReleased
+       Mtcontrat.setBackground(new java.awt.Color(250,250,250)); 
+     txtnombreh.setBackground(new java.awt.Color(250,250,250)); 
+     nbrexamen.setBackground(new java.awt.Color(51,153,255));
+    }//GEN-LAST:event_nbrexamenMouseReleased
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AjoutContrat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AjoutContrat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AjoutContrat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AjoutContrat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AjoutContrat().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox Codeb;
+    private javax.swing.JComboBox ComboInscription;
+    private javax.swing.JCheckBox Conduiteb;
+    private javax.swing.JTextField Mtcontrat;
+    private javax.swing.JTable Table;
+    private javax.swing.JCheckBox activ;
+    private javax.swing.JCheckBox archiv;
+    private javax.swing.JButton btnadd;
+    private javax.swing.JButton btnnv;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private com.toedter.calendar.JDateChooser datedebit;
+    private com.toedter.calendar.JDateChooser datefin;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton modifierbtn;
+    private javax.swing.JTextField nbrexamen;
+    private javax.swing.JButton supbtn;
+    private javax.swing.JTextField txtcin;
+    private javax.swing.JTextField txtgsm;
+    private javax.swing.JTextField txtnom;
+    private javax.swing.JTextField txtnombreh;
+    private javax.swing.JTextField txtprenom;
+    // End of variables declaration//GEN-END:variables
+}
